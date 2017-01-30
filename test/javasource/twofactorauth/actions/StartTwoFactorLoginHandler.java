@@ -110,15 +110,13 @@ public class StartTwoFactorLoginHandler extends CustomJavaAction<java.lang.Boole
 			IUser userObj = Core.getUser(sysContext, user);
 
 			if (userObj != null) {
-				boolean isBlocked = checkBlocked(sysContext, userObj);
-				boolean isActive = checkActive(sysContext, userObj);
 				boolean validPassword = Core.authenticate(sysContext, userObj, password);
 			
-				if (!isActive) {
+				if (!userObj.isActive()) {
 					response.setStatus(401);
 					TWOFACTORLOGIN.info(user + " tried to log in, but is inactive.");
 				}
-				else if (isBlocked) {
+				else if (userObj.isBlocked()) {
 					response.setStatus(401);
 					TWOFACTORLOGIN.info(user + " is currently blocked due to failed login attempts");
 				} else if (!validPassword) {
@@ -163,15 +161,12 @@ public class StartTwoFactorLoginHandler extends CustomJavaAction<java.lang.Boole
 			IUser userObj = Core.getUser(sysContext, user);
 			
 			if (userObj != null) {
-				boolean isBlocked = checkBlocked(sysContext, userObj);
-				boolean isActive = checkActive(sysContext, userObj);
 				boolean validPassword = Core.authenticate(sysContext, userObj, password);
-			
-				
-				if (!isActive) {
+						
+				if (!userObj.isActive()) {
 					response.setStatus(401);
 					TWOFACTORLOGIN.info(user + " tried to log in, but is inactive.");
-				} else if (isBlocked) {
+				} else if (userObj.isBlocked()) {
 					response.setStatus(401);
 					TWOFACTORLOGIN.info(user + " is currently blocked due to previous failed login attempts");
 				} else if (!validPassword) {
@@ -223,19 +218,6 @@ public class StartTwoFactorLoginHandler extends CustomJavaAction<java.lang.Boole
 			response.setStatus(IMxRuntimeResponse.OK);
 			setCookies(response, newSession);
 		}		
-
-		private boolean checkBlocked(IContext sysContext, IUser userObj) {
-			IMendixObject userMxObj = userObj.getMendixObject();
-			system.proxies.User userEntity = system.proxies.User.initialize(sysContext, userMxObj);
-			
-			return userEntity.getBlocked();
-		}
-		private boolean checkActive(IContext sysContext, IUser userObj) {
-			IMendixObject userMxObj = userObj.getMendixObject();
-			system.proxies.User userEntity = system.proxies.User.initialize(sysContext , userMxObj);
-			
-			return userEntity.getActive();
-		}
 		
 		private void logFailedLogin(IContext sysContext, IUser userObj) {
 			IMendixObject userMxObj = userObj.getMendixObject();
