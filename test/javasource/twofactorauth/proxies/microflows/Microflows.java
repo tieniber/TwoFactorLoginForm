@@ -10,10 +10,35 @@ import com.mendix.core.Core;
 import com.mendix.core.CoreException;
 import com.mendix.systemwideinterfaces.MendixRuntimeException;
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
 	// These are the microflows for the TwoFactorAuth module
+	public static boolean aSu_StartMagicLinkLoginHandler(IContext context)
+	{
+		try
+		{
+			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
+			return (java.lang.Boolean)Core.execute(context, "TwoFactorAuth.ASu_StartMagicLinkLoginHandler", params);
+		}
+		catch (CoreException e)
+		{
+			throw new MendixRuntimeException(e);
+		}
+	}
+	public static boolean aSu_StartTwoFactorLoginRequestHandlers(IContext context)
+	{
+		try
+		{
+			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
+			return (java.lang.Boolean)Core.execute(context, "TwoFactorAuth.ASu_StartTwoFactorLoginRequestHandlers", params);
+		}
+		catch (CoreException e)
+		{
+			throw new MendixRuntimeException(e);
+		}
+	}
 	public static boolean checkTFAActive(IContext context, java.lang.String _user)
 	{
 		try
@@ -53,12 +78,27 @@ public class Microflows
 			throw new MendixRuntimeException(e);
 		}
 	}
-	public static boolean startTwoFactorLoginRequestHandlers(IContext context)
+	public static boolean sUB_SendToken(IContext context, administration.proxies.Account _account)
 	{
 		try
 		{
 			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
-			return (java.lang.Boolean)Core.execute(context, "TwoFactorAuth.StartTwoFactorLoginRequestHandlers", params);
+			params.put("Account", _account == null ? null : _account.getMendixObject());
+			return (java.lang.Boolean)Core.execute(context, "TwoFactorAuth.SUB_SendToken", params);
+		}
+		catch (CoreException e)
+		{
+			throw new MendixRuntimeException(e);
+		}
+	}
+	public static administration.proxies.Account validateGUID(IContext context, java.lang.String _guid)
+	{
+		try
+		{
+			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
+			params.put("guid", _guid);
+			IMendixObject result = (IMendixObject)Core.execute(context, "TwoFactorAuth.ValidateGUID", params);
+			return result == null ? null : administration.proxies.Account.initialize(context, result);
 		}
 		catch (CoreException e)
 		{

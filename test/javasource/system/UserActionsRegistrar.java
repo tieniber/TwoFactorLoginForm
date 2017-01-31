@@ -124,6 +124,7 @@ public class UserActionsRegistrar implements EventHandler
 			component.actionRegistry().registerUserAction(system.actions.VerifyPassword.class);
 			component.actionRegistry().registerUserAction(twiliosms.actions.urlEncode.class);
 			component.actionRegistry().registerUserAction(twofactorauth.actions.StartDefaultLoginOverrideHandler.class);
+			component.actionRegistry().registerUserAction(twofactorauth.actions.StartMagicLinkLoginHandler.class);
 			component.actionRegistry().registerUserAction(twofactorauth.actions.StartTwoFactorLoginHandler.class);
 		}
 	}

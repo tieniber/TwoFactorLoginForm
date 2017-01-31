@@ -31,18 +31,18 @@ import com.mendix.webui.CustomJavaAction;
  */
 public class StartTwoFactorLoginHandler extends CustomJavaAction<java.lang.Boolean>
 {
-	private java.lang.String SendTFATokenMicroflow;
-	private java.lang.String CheckTFAActiveMicroflow;
-	private java.lang.String CheckTokenMicroflow;
-	private java.lang.String ResetTokenMicroflow;
+	private java.lang.String SendTFAToken;
+	private java.lang.String CheckTFAActive;
+	private java.lang.String CheckToken;
+	private java.lang.String ResetToken;
 
-	public StartTwoFactorLoginHandler(IContext context, java.lang.String SendTFATokenMicroflow, java.lang.String CheckTFAActiveMicroflow, java.lang.String CheckTokenMicroflow, java.lang.String ResetTokenMicroflow)
+	public StartTwoFactorLoginHandler(IContext context, java.lang.String SendTFAToken, java.lang.String CheckTFAActive, java.lang.String CheckToken, java.lang.String ResetToken)
 	{
 		super(context);
-		this.SendTFATokenMicroflow = SendTFATokenMicroflow;
-		this.CheckTFAActiveMicroflow = CheckTFAActiveMicroflow;
-		this.CheckTokenMicroflow = CheckTokenMicroflow;
-		this.ResetTokenMicroflow = ResetTokenMicroflow;
+		this.SendTFAToken = SendTFAToken;
+		this.CheckTFAActive = CheckTFAActive;
+		this.CheckToken = CheckToken;
+		this.ResetToken = ResetToken;
 	}
 
 	@Override
@@ -127,13 +127,13 @@ public class StartTwoFactorLoginHandler extends CustomJavaAction<java.lang.Boole
 					//Check if two-factor auth is enabled
 					HashMap<String, Object> params = new HashMap<String, Object>();
 					params.put("user", user);
-					boolean twoFactor = Core.execute(sysContext, CheckTFAActiveMicroflow, true, params);
+					boolean twoFactor = Core.execute(sysContext, CheckTFAActive, true, params);
 					
 					if (twoFactor) {
 						//two-factor enabled, need to send the user a token
 						HashMap<String, Object> checkParams = new HashMap<String, Object>();
 						checkParams.put("user", user);
-						boolean success = Core.execute(sysContext, SendTFATokenMicroflow, true, checkParams);
+						boolean success = Core.execute(sysContext, SendTFAToken, true, checkParams);
 						
 						if (success) {
 							//token was sent
@@ -141,7 +141,7 @@ public class StartTwoFactorLoginHandler extends CustomJavaAction<java.lang.Boole
 							TWOFACTORLOGIN.info(user + " uses two-factor authentication, a token was delivered to the user.");									
 							response.setStatus(202);
 						} else {
-							TWOFACTORLOGIN.error("Unable to send TFA Token for user: " + user + ". The microflow " + SendTFATokenMicroflow + " returned false.");
+							TWOFACTORLOGIN.error("Unable to send TFA Token for user: " + user + ". The microflow " + SendTFAToken + " returned false.");
 							response.setStatus(503);
 						}
 					} else {
@@ -178,13 +178,13 @@ public class StartTwoFactorLoginHandler extends CustomJavaAction<java.lang.Boole
 					HashMap<String, Object> params = new HashMap<String, Object>();
 					params.put("user", user);
 					params.put("token", token);
-					boolean validToken = Core.execute(sysContext, CheckTokenMicroflow, true, params);
+					boolean validToken = Core.execute(sysContext, CheckToken, true, params);
 					
 					if (validToken) {
 						//remove the token
 						HashMap<String, Object> removeTokenParams = new HashMap<String, Object>();
 						removeTokenParams.put("user", user);
-						Core.execute(sysContext, ResetTokenMicroflow, true, removeTokenParams);
+						Core.execute(sysContext, ResetToken, true, removeTokenParams);
 						
 						//now actually log in
 						TWOFACTORLOGIN.info("UserName: " + user + " is attempting two-factor login");

@@ -10,8 +10,13 @@ public class Constants
 {
 	// These are the constants for the TwoFactorAuth module
 
-	public static boolean getEnabled()
+	public static boolean getMagicLinkEnabled()
 	{
-		return (java.lang.Boolean)Core.getConfiguration().getConstantValue("TwoFactorAuth.Enabled");
+		return (java.lang.Boolean)Core.getConfiguration().getConstantValue("TwoFactorAuth.MagicLinkEnabled");
+	}
+
+	public static boolean getTwoFactorEnabled()
+	{
+		return (java.lang.Boolean)Core.getConfiguration().getConstantValue("TwoFactorAuth.TwoFactorEnabled");
 	}
 }
